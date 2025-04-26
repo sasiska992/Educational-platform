@@ -13,13 +13,10 @@ app = FastAPI()
 
 # Определите функцию для включения маршрутизатора
 def include_routers():
-    from src.cards.view import router as card_router
-    from src.game.rooms import router as game_router
-    from src.game.sockets import router as game_socket_router
-    app.include_router(game_socket_router)
-    app.include_router(card_router)
-    app.include_router(game_router)
-
+    from src.routers import students_router, users_router
+    app.include_router(students_router, prefix="/students", tags=["students"])
+    app.include_router(users_router, prefix="/users", tags=["users"])
+    pass
 
 # if __name__ == "__main__":
 #     import uvicorn

@@ -27,8 +27,6 @@ class Base(DeclarativeBase):
     def update_values(self, **kwargs):
         try:
             with Session() as session:
-                # Убедитесь, что объект уже загружен в сессию
-                # Если self не был загружен из базы данных, вам нужно его сначала получить
                 existing_object = session.query(type(self)).get(self.id)
                 if existing_object is None:
                     print("Объект не найден.")
@@ -52,3 +50,14 @@ class Base(DeclarativeBase):
         except SQLAlchemyError as e:
             print(f"Error selecting object: {e}")
             return None
+
+    @classmethod
+    def select_for_all(self):
+        """Выбирает все объекты типа cls."""
+        try:
+            with Session() as session:
+                result = session.query(self).all()
+                print(result)
+                return result
+        except SQLAlchemyError as e:
+            print(f"Error selecting object: {e}")
