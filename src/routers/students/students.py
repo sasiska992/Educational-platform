@@ -7,7 +7,6 @@ router = APIRouter(tags=["students"])
 
 @router.get("/get_all_students")
 def get_students():    
-    # students:list[Student] = Student.select_for_all()
     with Session() as session:
         students = session.query(Student).all()
         students[0].user
