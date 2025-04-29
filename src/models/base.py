@@ -57,7 +57,6 @@ class Base(DeclarativeBase):
         try:
             with Session() as session:
                 result = session.query(self).all()
-                print(result)
                 return result
         except SQLAlchemyError as e:
             print(f"Error selecting object: {e}")
