@@ -3,8 +3,6 @@ from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column, relationship
 from src.models.base import Base
 
-from typing import List
-
 
 class HashedPassword:
     from passlib.context import CryptContext
@@ -12,12 +10,11 @@ class HashedPassword:
     pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
     @classmethod
-    def hash(cls, password: str):  # Изменено на cls
-        print(cls.pwd_context.hash(password))
+    def hash(cls, password: str):
         return cls.pwd_context.hash(password)
 
     @classmethod
-    def verify(cls, password: str, hashed_password: str) -> bool:  # Изменено на cls
+    def verify(cls, password: str, hashed_password: str) -> bool:
         return cls.pwd_context.verify(password, hashed_password)
 
 
@@ -30,7 +27,6 @@ class User(Base):
     password: Mapped[str] = mapped_column(String(128), nullable=False)
     role: Mapped[str] = mapped_column(String(50), nullable=False)
 
-    # Связи
     teacher: Mapped["Teacher"] = relationship(
         "Teacher", back_populates="user", uselist=False
     )

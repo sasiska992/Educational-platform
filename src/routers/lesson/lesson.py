@@ -38,7 +38,6 @@ def create_lesson(
 async def lesson(request: Request, lesson_id: int):
     with Session() as session:
         lesson = session.query(Lesson).filter(Lesson.id == lesson_id).first()
-        # lesson.grade =
         homeworks = (
             session.query(Homework).filter(Homework.lesson_id == lesson_id).all()
         )
@@ -92,7 +91,6 @@ class CheckHomework(BaseModel):
 async def check_homework(data: CheckHomework):
     lesson_id = int(data.lesson_id)
     grade = int(data.grade)
-    print(grade)
     with Session() as session:
         lesson: Lesson = session.query(Lesson).filter(Lesson.id == lesson_id).first()
         lesson.grade = grade
