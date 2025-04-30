@@ -1,5 +1,7 @@
 from fastapi import APIRouter, Request, status, Form
 
+from fastapi import status
+from pydantic import BaseModel
 from fastapi.responses import HTMLResponse, RedirectResponse
 from src.models.homework import Homework
 from src.routers import templates
@@ -36,7 +38,7 @@ def create_lesson(
 async def lesson(request: Request, lesson_id: int):
     with Session() as session:
         lesson = session.query(Lesson).filter(Lesson.id == lesson_id).first()
-        lesson.grade = 4
+        # lesson.grade =
         homeworks = (
             session.query(Homework).filter(Homework.lesson_id == lesson_id).all()
         )
@@ -44,10 +46,6 @@ async def lesson(request: Request, lesson_id: int):
     return templates.TemplateResponse(
         "lesson.html", {"request": request, "lesson": lesson}
     )
-
-
-from fastapi import status, Query
-from pydantic import BaseModel
 
 
 class HomeworkCreate(BaseModel):
@@ -83,3 +81,20 @@ async def create_homework(form_homework: HomeworkCreate) -> dict:
         "title": homework.name,
         "description": homework.description,
     }
+
+
+class CheckHomework(BaseModel):
+    grade: str
+    lesson_id: str
+
+
+@router.post("/check_homework")
+async def check_homework(data: CheckHomework):
+    lesson_id = int(data.lesson_id)
+    grade = int(data.grade)
+    print(grade)
+    with Session() as session:
+        lesson: Lesson = session.query(Lesson).filter(Lesson.id == lesson_id).first()
+        lesson.grade = grade
+        session.commit()
+    return {"status": "200", "message": "Оценка успешно отправлена"}

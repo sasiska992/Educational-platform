@@ -19,8 +19,9 @@ class Lesson(Base):
     teacher: Mapped["Teacher"] = relationship("Teacher", back_populates="lessons")
 
     homework: Mapped["Homework"] = relationship(
-        "Homework", back_populates="homework", uselist=False
+        "Homework", back_populates="lesson", uselist=False
     )
+
 
     def __init__(
         self,
